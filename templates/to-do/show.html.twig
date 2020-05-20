@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'title_to_do_details'|trans }}{{ toDoList.id }}
+{% endblock %}
+
+{% block body %}
+    <h1>{{ 'label_title'|trans }} - {{ toDoList.title }}</h1>
+    <p>{{ 'list_date'|trans }} - {{ toDoList.creation|date('d-m-yy') }}</p>
+    <p>{{ 'label_tags'|trans }}:</p>
+    <h2>{{ 'header_to_do'|trans({'%id%': toDoList.id|default('')}) }}</h2>
+    <table>
+        <tr>
+            <th>{{ 'label_name'|trans }}</th>
+            <th>{{ 'list_element_done'|trans }}</th>
+        </tr>
+        {% for element in toDoList.listElements %}
+            <tr>
+                <td>{{ element.content }}</td>
+                <td><input type="checkbox"></td>
+            </tr>
+        {% endfor %}
+    </table>
+    <hr>
+    <h3>{{ 'label_comments'|trans }}</h3>
+    <ul>
+        {% for comment in toDoList.comments %}
+            <li>{{ comment.comment }}</li>
+        {% endfor %}
+    </ul>
+    <p>
+        <a href="{{ url('to_do_index') }}" title="{{ 'action_back_to_list'|trans }}">
+            {{ 'action_back_to_list'|trans }}
+        </a>
+    </p>
+{% endblock %}
