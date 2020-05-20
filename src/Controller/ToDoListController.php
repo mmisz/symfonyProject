@@ -83,4 +83,44 @@ class ToDoListController extends AbstractController
             'toDoList' => $toDoList]
         );
     }
+
+    /**
+     * Edit action.
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request HTTP request
+     * @param \App\Repository\ListComment $listComment
+     * @param \App\Repository\ListCommentRepository $listCommentRepository
+     * @return \Symfony\Component\HttpFoundation\Response HTTP response
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @Route(
+     *     "/list-comment/{id}",
+     *     methods={"GET", "PUT"},
+     *     requirements={"id": "[1-9]\d*"},
+     *     name="list_comment_edit",
+     * )
+     */
+    public function edit(Request $request, ListComment $listComment, ListCommentRepository $listCommentRepository): Response
+    {
+        $form = $this->createForm(ListCommentType::class, $listComment, ['method' => 'PUT']);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $listCommentRepository->save($listComment);
+
+            $this->addFlash('success', 'message_updated_successfully');
+            $toDoList = $listComment->getToDoList();
+            return $this->redirectToRoute('to_do_show',['id'=>$toDoList->getId()]);
+        }
+
+        return $this->render(
+            'to-do/editComment.html.twig',
+            [
+                'form' => $form->createView(),
+                'listComment' => $listComment,
+                'listId' => $listComment->getToDoList()->getId(),
+            ]
+        );
+    }
 }

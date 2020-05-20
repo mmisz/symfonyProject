@@ -68,4 +68,17 @@ class ListCommentRepository extends ServiceEntityRepository
     {
         return $queryBuilder ?? $this->createQueryBuilder('listComment');
     }
+    /**
+     * Delete record.
+     *
+     * @param \App\Entity\ListComment $listComment ListComment entity
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function delete(ListComment $listComment): void
+    {
+        $this->_em->remove($listComment);
+        $this->_em->flush($listComment);
+    }
 }
