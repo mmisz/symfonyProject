@@ -28,9 +28,14 @@
             <li>{{ comment.comment }}</li>
         {% endfor %}
     </ul>
-    <p>
+    <b>{{ 'title_comment_create'|trans }}</b>
+    {{ form_start(form, { method: 'POST', action: url('to_do_show',{'id': toDoList.id}) }) }}
+    {{ form_widget(form) }}
+    <div class="form-group row float-sm-right">
+    <input type="submit" value="{{ 'action_save'|trans }}" class="btn btn-primary" />
+    <div>
         <a href="{{ url('to_do_index') }}" title="{{ 'action_back_to_list'|trans }}">
             {{ 'action_back_to_list'|trans }}
         </a>
-    </p>
+    </div>
 {% endblock %}

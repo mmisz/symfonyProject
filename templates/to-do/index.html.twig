@@ -18,7 +18,6 @@
                 <th>{{ knp_pagination_sortable(pagination, 'label_id'|trans, 'toDoList.id') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'label_title'|trans, 'toDoList.title') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'label_created_at'|trans, 'toDoList.creation') }}</th>
-                <th>{{ 'label_user'|trans }}</th>
                 <th>{{ 'label_actions'|trans }}</th>
                 <th></th>
             </tr>
@@ -30,9 +29,8 @@
                     <td>{{ toDoList.title }}</td>
                     <td>{{ toDoList.creation|date('d-m-yy') }}</td>
                     <td></td>
-                    <td></td>
                     <td>
-                        <a href="{{ url('to_do_show', {id: toDoList.id}) }}" title="{{ 'action_view'|trans }}">
+                        <a href="{{ url('to_do_show', {'id': toDoList.id}) }}" title="{{ 'action_view'|trans }}">
                             {{ 'action_view'|trans }}
                         </a>
                     </td>

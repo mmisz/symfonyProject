@@ -5,14 +5,18 @@
 
 namespace App\Controller;
 
+use App\Entity\ListElement;
 use App\Entity\ToDoList;
+use App\Repository\ListElementRepository;
 use App\Repository\ToDoListRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Knp\Component\Pager\PaginatorInterface;
-
+use App\Form\ListCommentType;
+use App\Repository\ListCommentRepository;
+use App\Entity\ListComment;
 /**
  * Class ToDoList.
  *
@@ -57,16 +61,26 @@ class ToDoListController extends AbstractController
      *
      * @Route(
      *     "/{id}",
-     *     methods={"GET"},
+     *     methods={"GET", "POST"},
      *     name="to_do_show",
      *     requirements={"id": "[1-9]\d*"},
      * )
      */
-    public function show(ToDoList $toDoList): Response
+    public function show(ToDoList $toDoList, Request $request, ListCommentRepository $listCommentRepository): Response
     {
+        $listComment = new ListComment();
+        $form = $this->createForm(ListCommentType::class, $listComment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $toDoList->addComment($listComment);
+            $listCommentRepository->save($listComment);
+        }
+
         return $this->render(
             'to-do/show.html.twig',
-            ['toDoList' => $toDoList]
+            ['form' => $form->createView(),
+            'toDoList' => $toDoList]
         );
     }
 }

@@ -44,7 +44,19 @@ class ListCommentRepository extends ServiceEntityRepository
         return $this->getOrCreateQueryBuilder()
             ->orderBy('listComment.updatedAt', 'DESC');
     }
-
+    /**
+     * Save record.
+     *
+     * @param \App\Entity\ListComment $listComment Category entity
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function save(ListComment $listComment): void
+    {
+        $this->_em->persist($listComment);
+        $this->_em->flush($listComment);
+    }
     /**
      * Get or create new query builder.
      *
