@@ -22,6 +22,7 @@
         {% endfor %}
     </table>
     <hr>
+    {% if toDoList.comments|length %}
     <table>
         <tr>
             <th><h3>{{ 'label_comments'|trans }}</h3></th>
@@ -37,7 +38,7 @@
                 <a href="{{ url('list_comment_edit', {'id': comment.id}) }}">
                     <button class="btn btn-secondary">{{ 'label_edit'|trans }}</button>
                 </a>
-                <a href="#">
+                <a href="{{ url('list_comment_delete', {'id': comment.id}) }}">
                      <button class="btn btn-secondary">{{ 'label_delete'|trans }}</button>
                 </a>
                 </td>
@@ -45,6 +46,7 @@
         {% endfor %}
     </table>
     <hr>
+        {% endif %}
     <b>{{ 'title_comment_create'|trans }}</b>
     {{ form_start(form, { method: 'POST', action: url('to_do_show',{'id': toDoList.id}) }) }}
     {{ form_widget(form) }}

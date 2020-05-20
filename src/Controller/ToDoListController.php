@@ -73,6 +73,7 @@ class ToDoListController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->addFlash('success', 'message.deleted_successfully');
             $toDoList->addComment($listComment);
             $listCommentRepository->save($listComment);
         }
@@ -95,7 +96,7 @@ class ToDoListController extends AbstractController
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      * @Route(
-     *     "/list-comment/{id}",
+     *     "/list-comment-edit/{id}",
      *     methods={"GET", "PUT"},
      *     requirements={"id": "[1-9]\d*"},
      *     name="list_comment_edit",
@@ -109,13 +110,58 @@ class ToDoListController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $listCommentRepository->save($listComment);
 
-            $this->addFlash('success', 'message_updated_successfully');
+            $this->addFlash('success', 'message_added_successfully');
             $toDoList = $listComment->getToDoList();
             return $this->redirectToRoute('to_do_show',['id'=>$toDoList->getId()]);
         }
 
         return $this->render(
             'to-do/editComment.html.twig',
+            [
+                'form' => $form->createView(),
+                'listComment' => $listComment,
+                'listId' => $listComment->getToDoList()->getId(),
+            ]
+        );
+    }
+    /**
+     * Delete action.
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request            HTTP request
+     * @param \App\Repository\ListComment $listComment
+     * @param \App\Repository\ListCommentRepository $listCommentRepository
+     *
+     * @return \Symfony\Component\HttpFoundation\Response HTTP response
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     *
+     * @Route(
+     *     "/list-comment-delete/{id}",
+     *     methods={"GET", "DELETE"},
+     *     requirements={"id": "[1-9]\d*"},
+     *     name="list_comment_delete",
+     * )
+     */
+    public function delete(Request $request, ListComment $listComment, ListCommentRepository $listCommentRepository): Response
+    {
+        $form = $this->createForm(ListCommentType::class, $listComment, ['method' => 'DELETE']);
+        $form->handleRequest($request);
+
+        if (!$form->isSubmitted() && $request->isMethod('DELETE')) {
+            $form->submit($request->request->get($form->getName()));
+        }
+        if($form->isSubmitted() && $form->isValid()){
+            $this->addFlash('success', 'message_deleted_successfully');
+            $listCommentRepository->delete($listComment);
+            $toDoList = $listComment->getToDoList();
+            return $this->redirectToRoute('to_do_show',['id'=>$toDoList->getId()]);
+        }
+
+
+
+        return $this->render(
+            'to-do/deleteComment.html.twig',
             [
                 'form' => $form->createView(),
                 'listComment' => $listComment,

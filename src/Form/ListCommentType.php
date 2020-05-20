@@ -30,24 +30,14 @@ class ListCommentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add(
-        'comment',
-        TextType::class,
-        [
+            'comment',
+            TextType::class,
+            [
             'label' => 'label_comment',
             'required' => true,
             'attr' => ['max_length' => 255],
         ]
-    );
-        $builder->add(
-            'comment',
-            TextType::class,
-            [
-                'label' => 'label_comment',
-                'required' => true,
-                'attr' => ['max_length' => 255],
-            ]
         );
-
     }
 
     /**
