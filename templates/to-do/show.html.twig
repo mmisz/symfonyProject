@@ -11,11 +11,13 @@
     <h2>{{ 'header_to_do'|trans({'%id%': toDoList.id|default('')}) }}</h2>
     <table>
         <tr>
+            <th></th>
             <th>{{ 'label_name'|trans }}</th>
             <th>{{ 'list_element_done'|trans }}</th>
         </tr>
         {% for element in toDoList.listElements %}
             <tr>
+                <th>{{ loop.index }}.</th>
                 <td>{{ element.content }}</td>
                 <td><input type="checkbox"></td>
             </tr>

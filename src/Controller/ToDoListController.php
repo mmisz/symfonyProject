@@ -73,7 +73,7 @@ class ToDoListController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->addFlash('success', 'message.deleted_successfully');
+            $this->addFlash('success', 'message_created_successfully');
             $toDoList->addComment($listComment);
             $listCommentRepository->save($listComment);
         }
@@ -110,7 +110,7 @@ class ToDoListController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $listCommentRepository->save($listComment);
 
-            $this->addFlash('success', 'message_added_successfully');
+            $this->addFlash('success', 'message_edited_successfully');
             $toDoList = $listComment->getToDoList();
             return $this->redirectToRoute('to_do_show',['id'=>$toDoList->getId()]);
         }
