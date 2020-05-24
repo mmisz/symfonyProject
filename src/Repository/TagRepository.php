@@ -2,18 +2,18 @@
 
 namespace App\Repository;
 
-use App\Entity\ToDoList;
+use App\Entity\Tag;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\QueryBuilder;
 
 /**
- * @method ToDoList|null find($id, $lockMode = null, $lockVersion = null)
- * @method ToDoList|null findOneBy(array $criteria, array $orderBy = null)
- * @method ToDoList[]    findAll()
- * @method ToDoList[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Tag|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Tag|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Tag[]    findAll()
+ * @method Tag[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ToDoListRepository extends ServiceEntityRepository
+class TagRepository extends ServiceEntityRepository
 {
     /**
      * Items per page.
@@ -33,7 +33,7 @@ class ToDoListRepository extends ServiceEntityRepository
      */
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, ToDoList::class);
+        parent::__construct($registry, Tag::class);
     }
 
 
@@ -46,7 +46,7 @@ class ToDoListRepository extends ServiceEntityRepository
     public function queryAll(): QueryBuilder
     {
         return $this->getOrCreateQueryBuilder()
-            ->orderBy('toDoList.creation', 'DESC');
+            ->orderBy('tag.id', 'DESC');
     }
 
     /**
@@ -58,19 +58,6 @@ class ToDoListRepository extends ServiceEntityRepository
      */
     private function getOrCreateQueryBuilder(QueryBuilder $queryBuilder = null): QueryBuilder
     {
-        return $queryBuilder ?? $this->createQueryBuilder('toDoList');
-    }
-    /**
-     * Save record.
-     *
-     * @param \App\Entity\ListComment $toDoList Category entity
-     *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function save(ToDoList $toDoList): void
-    {
-        $this->_em->persist($toDoList);
-        $this->_em->flush($toDoList);
+        return $queryBuilder ?? $this->createQueryBuilder('tag');
     }
 }

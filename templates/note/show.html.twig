@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'title_tag_details'|trans }}{{ tag.name }}
+{% endblock %}
+
+{% block body %}
+    <h1>{{ 'title_tag_details'|trans }} - {{ tag.name }}</h1>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>{{ 'label_id'|trans }}</th>
+            <th>{{ 'label_title'|trans }}</th>
+            <th>{{'label_created_at'|trans }}</th>
+            <th>{{ 'label_actions'|trans }}</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for toDoList in tag.toDoList %}
+            <tr>
+                <td>{{ toDoList.id }}</td>
+                <td>{{ toDoList.title }}</td>
+                <td>{{ toDoList.creation|date('d-m-yy') }}</td>
+                <td></td>
+                <td>
+                    <a href="{{ url('to_do_show', {'id': toDoList.id}) }}" title="{{ 'action_view'|trans }}">
+                        {{ 'action_view'|trans }}
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="form-group row float-sm-left">
+        <a href="{{ url('list_tag_index') }}" title="{{ 'action_back_to_tags'|trans }}">
+            {{ 'action_back_to_tags'|trans }}
+        </a>
+    </div>
+{% endblock %}

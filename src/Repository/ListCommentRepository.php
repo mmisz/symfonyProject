@@ -47,7 +47,7 @@ class ListCommentRepository extends ServiceEntityRepository
     /**
      * Save record.
      *
-     * @param \App\Entity\ListComment $listComment Category entity
+     * @param \App\Entity\ListComment $listComment ListComment entity
      *
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException

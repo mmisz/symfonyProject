@@ -6,8 +6,15 @@
 
 {% block body %}
     <h1>{{ 'label_title'|trans }} - {{ toDoList.title }}</h1>
-    <p>{{ 'list_date'|trans }} - {{ toDoList.creation|date('d-m-yy') }}</p>
-    <p>{{ 'label_tags'|trans }}:</p>
+    <a href="{{ url('to_do_edit', {'id': toDoList.id}) }}" class="btn btn-primary">{{ 'label_list_manage'|trans }}</a>
+    <p>{{ 'list_date_created'|trans }} - {{ toDoList.creation|date('d-m-yy') }}</p>
+    <p>
+        {{ 'label_tags'|trans }}:
+    {% for element in toDoList.tags %}
+        <a href="{{ url('list_tag_show', {'id': element.id}) }}">#{{ element.name }}</a>
+    {% endfor %}
+    </p>
+    <hr>
     <h2>{{ 'header_to_do'|trans({'%id%': toDoList.id|default('')}) }}</h2>
     <table>
         <tr>
@@ -19,7 +26,11 @@
             <tr>
                 <th>{{ loop.index }}.</th>
                 <td>{{ element.content }}</td>
-                <td><input type="checkbox"></td>
+                {% if element.done == 0 %}
+                    <td><input type="checkbox" disabled></td>
+                {% else %}
+                    <td><input type="checkbox" disabled checked></td>
+                {% endif %}
             </tr>
         {% endfor %}
     </table>
@@ -31,16 +42,16 @@
             <th>{{ 'label_actions'|trans }}</th>
 
         </tr>
-        {% for comment in toDoList.comments %}
+        {% for element in toDoList.comments %}
             <tr>
                 <td>
-                    {{ comment.comment }}
+                    {{ element.comment }}
                 </td>
                 <td>
-                <a href="{{ url('list_comment_edit', {'id': comment.id}) }}">
+                <a href="{{ url('list_comment_edit', {'id': element.id}) }}">
                     <button class="btn btn-secondary">{{ 'label_edit'|trans }}</button>
                 </a>
-                <a href="{{ url('list_comment_delete', {'id': comment.id}) }}">
+                <a href="{{ url('list_comment_delete', {'id': element.id}) }}">
                      <button class="btn btn-secondary">{{ 'label_delete'|trans }}</button>
                 </a>
                 </td>
@@ -53,9 +64,8 @@
     {{ form_start(form, { method: 'POST', action: url('to_do_show',{'id': toDoList.id}) }) }}
     {{ form_widget(form) }}
     <div class="form-group row float-sm-right">
-        <input type="submit" value="{{ 'action_save'|trans }}" class="btn btn-primary" />
+        <input type="submit" value="{{ 'action_save_comment'|trans }}" class="btn btn-primary" />
     </div>
-    <hr>
     <div class="form-group row float-sm-left">
         <a href="{{ url('to_do_index') }}" title="{{ 'action_back_to_list'|trans }}">
             {{ 'action_back_to_list'|trans }}
