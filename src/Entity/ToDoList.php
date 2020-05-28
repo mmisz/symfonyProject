@@ -45,16 +45,10 @@ class ToDoList
      */
     private $listElements;
 
-    /**
-     * @ORM\ManyToMany(targetEntity=Tag::class, mappedBy="to_do_list")
-     */
-    private $tags;
-
     public function __construct()
     {
         $this->comments = new ArrayCollection();
         $this->listElements = new ArrayCollection();
-        $this->tags = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -155,34 +149,6 @@ class ToDoList
             if ($listElement->getList() === $this) {
                 $listElement->setList(null);
             }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Tag[]
-     */
-    public function getTags(): Collection
-    {
-        return $this->tags;
-    }
-
-    public function addTag(Tag $tag): self
-    {
-        if (!$this->tags->contains($tag)) {
-            $this->tags[] = $tag;
-            $tag->addToDoList($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTag(Tag $tag): self
-    {
-        if ($this->tags->contains($tag)) {
-            $this->tags->removeElement($tag);
-            $tag->removeToDoList($this);
         }
 
         return $this;

@@ -5,7 +5,9 @@
 
 namespace App\Controller;
 
+use App\Entity\ListElement;
 use App\Entity\ToDoList;
+use App\Repository\ListElementRepository;
 use App\Repository\ToDoListRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,7 +17,6 @@ use Knp\Component\Pager\PaginatorInterface;
 use App\Form\ListCommentType;
 use App\Repository\ListCommentRepository;
 use App\Entity\ListComment;
-use App\Form\ToDoListType;
 /**
  * Class ToDoList.
  *
@@ -52,19 +53,19 @@ class ToDoListController extends AbstractController
     }
 
     /**
- * Show action.
- *
- * @param \App\Entity\ToDoList $toDoList ToDoList entity
- *
- * @return \Symfony\Component\HttpFoundation\Response HTTP response
- *
- * @Route(
- *     "/{id}",
- *     methods={"GET", "POST"},
- *     name="to_do_show",
- *     requirements={"id": "[1-9]\d*"},
- * )
- */
+     * Show action.
+     *
+     * @param \App\Entity\ToDoList $toDoList ToDoList entity
+     *
+     * @return \Symfony\Component\HttpFoundation\Response HTTP response
+     *
+     * @Route(
+     *     "/{id}",
+     *     methods={"GET", "POST"},
+     *     name="to_do_show",
+     *     requirements={"id": "[1-9]\d*"},
+     * )
+     */
     public function show(ToDoList $toDoList, Request $request, ListCommentRepository $listCommentRepository): Response
     {
         $listComment = new ListComment();
@@ -72,7 +73,7 @@ class ToDoListController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->addFlash('success', 'message_created_successfully');
+            $this->addFlash('success', 'message.deleted_successfully');
             $toDoList->addComment($listComment);
             $listCommentRepository->save($listComment);
         }
@@ -80,40 +81,12 @@ class ToDoListController extends AbstractController
         return $this->render(
             'to-do/show.html.twig',
             ['form' => $form->createView(),
-                'toDoList' => $toDoList]
+            'toDoList' => $toDoList]
         );
     }
+
     /**
      * Edit action.
-     *
-     * @param \App\Entity\ToDoList $toDoList ToDoList entity
-     *
-     * @return \Symfony\Component\HttpFoundation\Response HTTP response
-     *
-     * @Route(
-     *     "/edit-{id}",
-     *     methods={"GET", "POST"},
-     *     name="to_do_edit",
-     *     requirements={"id": "[1-9]\d*"},
-     * )
-     */
-    public function edit(ToDoList $toDoList, Request $request, ToDoListRepository $toDoListRepository): Response
-    {
-        $formTitle = $this->createForm(ToDoListType::class, $toDoList);
-        $formTitle->handleRequest($request);
-
-        if ($formTitle->isSubmitted() && $formTitle->isValid()) {
-            $this->addFlash('success', 'message_updated_successfully');
-            $toDoListRepository->save($toDoList);
-        }
-        return $this->render(
-            'to-do/edit.html.twig',
-            ['formTitle' => $formTitle->createView(),
-                'toDoList' => $toDoList]
-        );
-    }
-    /**
-     * editComment action.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request HTTP request
      * @param \App\Repository\ListComment $listComment
@@ -129,7 +102,7 @@ class ToDoListController extends AbstractController
      *     name="list_comment_edit",
      * )
      */
-    public function editComment(Request $request, ListComment $listComment, ListCommentRepository $listCommentRepository): Response
+    public function edit(Request $request, ListComment $listComment, ListCommentRepository $listCommentRepository): Response
     {
         $form = $this->createForm(ListCommentType::class, $listComment, ['method' => 'PUT']);
         $form->handleRequest($request);
@@ -137,7 +110,7 @@ class ToDoListController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $listCommentRepository->save($listComment);
 
-            $this->addFlash('success', 'message_updated_successfully');
+            $this->addFlash('success', 'message_added_successfully');
             $toDoList = $listComment->getToDoList();
             return $this->redirectToRoute('to_do_show',['id'=>$toDoList->getId()]);
         }
@@ -152,7 +125,7 @@ class ToDoListController extends AbstractController
         );
     }
     /**
-     * deleteComment action.
+     * Delete action.
      *
      * @param \Symfony\Component\HttpFoundation\Request $request            HTTP request
      * @param \App\Repository\ListComment $listComment
@@ -170,7 +143,7 @@ class ToDoListController extends AbstractController
      *     name="list_comment_delete",
      * )
      */
-    public function deleteComment(Request $request, ListComment $listComment, ListCommentRepository $listCommentRepository): Response
+    public function delete(Request $request, ListComment $listComment, ListCommentRepository $listCommentRepository): Response
     {
         $form = $this->createForm(ListCommentType::class, $listComment, ['method' => 'DELETE']);
         $form->handleRequest($request);

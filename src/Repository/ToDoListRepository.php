@@ -60,17 +60,4 @@ class ToDoListRepository extends ServiceEntityRepository
     {
         return $queryBuilder ?? $this->createQueryBuilder('toDoList');
     }
-    /**
-     * Save record.
-     *
-     * @param \App\Entity\ListComment $toDoList Category entity
-     *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function save(ToDoList $toDoList): void
-    {
-        $this->_em->persist($toDoList);
-        $this->_em->flush($toDoList);
-    }
 }
